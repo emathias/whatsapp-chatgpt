@@ -8,7 +8,7 @@ require("dotenv").config()
 
 // Prefix check
 const prefixEnabled = process.env.PREFIX_ENABLED == "true"
-const prefix = '!gpt'
+const prefix = '/'
 
 // Whatsapp Client
 const client = new Client()
@@ -17,6 +17,7 @@ const client = new Client()
 const api = new ChatGPTAPIBrowser({
     email: process.env.EMAIL,
     password: process.env.PASSWORD
+    //apiKey: process.env.API_KEY
 })
 
 // Entrypoint
@@ -82,3 +83,64 @@ const handleMessage = async (message: any, prompt: any) => {
 }
 
 start()
+
+//store messages from last 24h and embed
+// import low from 'lowdb';
+// import FileSync from 'lowdb/adapters/FileSync';
+
+// const adapter = new FileSync('db.json');
+// const db = low(adapter);
+
+// const handleMessage = async (message: any, prompt: any) => {
+//   try {
+//     const start = Date.now();
+
+//     console.log(`[Whatsapp ChatGPT] Received prompt from ${message.from}: ${prompt}`);
+
+//     // Add the prompt to the DB
+//     db.get('messages')
+//       .push({
+//         from: message.from,
+//         message: prompt,
+//         timestamp: start,
+//       })
+//       .write();
+
+//     // Send the prompt to the API
+//     const response = await api.sendMessage(prompt);
+
+//     console.log(`[Whatsapp ChatGPT] Answer to ${message.from}: ${response.response}`);
+
+//     const end = Date.now() - start;
+//     console.log(`[Whatsapp ChatGPT] ChatGPT took ${end}ms`);
+
+//     // Add the response to the DB
+//     db.get('messages')
+//       .push({
+//         from: 'ChatGPT',
+//         message: response.response,
+//         timestamp: end,
+//       })
+//       .write();
+
+//     // Clean up old messages
+//     const now = Date.now();
+//     db.set(
+//       'messages',
+//       db
+//         .get('messages')
+//         .filter(m => now - m.timestamp <= 24 * 60 * 60 * 1000)
+//         .value()
+//     )
+//       .write();
+
+//     // Send the response to the chat
+//     message.reply(response.response);
+//   } catch (error) {
+//     console.error('An error occured', error);
+//     message.reply(`An error occured, please contact the administrator. (${error.message})`);
+//   }
+// };
+
+// // Set default values for the DB
+// db.defaults({ messages: [] }).write();
